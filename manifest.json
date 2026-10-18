@@ -1,0 +1,9 @@
+{
+  "name": "BAAA-TAH",
+  "short_name": "BAAA-TAH",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fffaf0",
+  "theme_color": "#151515",
+  "icons": []
+}

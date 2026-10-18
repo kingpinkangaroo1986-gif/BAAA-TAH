@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#111">
+<title>BAAA-TAH — Trade Anything</title>
+<style>
+:root{--ink:#151515;--paper:#fffaf0;--card:#fff;--accent:#f2b705;--muted:#6d675d;--line:#e6dfd2;--good:#2e7d32}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+header{position:sticky;top:0;z-index:5;background:#151515;color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-weight:900;font-size:25px;letter-spacing:-1px}.logo span{color:var(--accent)}
+main{max-width:760px;margin:auto;padding:18px 14px 90px}.hero{background:var(--accent);border:3px solid #151515;border-radius:24px;padding:22px;box-shadow:6px 6px 0 #151515}
+.hero h1{font-size:38px;line-height:.95;margin:0 0 8px}.hero p{font-weight:650;margin:8px 0 18px}
+button{border:2px solid #151515;border-radius:13px;padding:12px 16px;font-weight:850;cursor:pointer;background:#fff}.primary{background:#151515;color:#fff}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:18px 0}.card{background:var(--card);border:2px solid var(--line);border-radius:18px;padding:14px}.listing{display:flex;gap:12px;align-items:center}.pic{width:78px;height:68px;border-radius:13px;background:#ddd;display:grid;place-items:center;font-size:30px}.muted{color:var(--muted);font-size:13px}.tag{display:inline-block;background:#f4ead0;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:800}
+nav{position:fixed;bottom:0;left:0;right:0;background:#151515;color:#fff;display:flex;justify-content:center;gap:8px;padding:8px;z-index:6}nav button{background:#292929;color:#fff;border-color:#444;padding:9px 12px;font-size:12px}
+section{display:none}section.active{display:block}.form{display:grid;gap:10px}.form input,.form textarea,.form select{width:100%;padding:13px;border:2px solid var(--line);border-radius:12px;font:inherit;background:white}.success{background:#e8f5e9;border:2px solid #a5d6a7;border-radius:16px;padding:14px;margin-top:12px;font-weight:800}
+.modal{position:fixed;inset:0;background:#0008;display:none;align-items:end;justify-content:center;z-index:10}.modal.open{display:flex}.sheet{background:var(--paper);width:min(760px,100%);border-radius:24px 24px 0 0;padding:20px}
+.big-sheep{text-align:center;font-size:70px}.sound{font-size:27px;font-weight:950;text-align:center;margin:10px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="logo">🐑 BAAA<span>-TAH</span></div><div>🇦🇺</div></header>
+
+<main>
+<section id="home" class="active">
+<div class="hero"><div class="big-sheep">🐑</div><h1>Trade anything.<br>Barter everything.</h1><p>Got something? Want something? Make a BAAA-TAH!</p><button class="primary" onclick="show('post')">+ Post a BAAA-TAH</button></div>
+<h2>🔥 Fresh BAAA-TAHs</h2>
+<div id="feed" class="grid"></div>
+</section>
+
+<section id="browse"><h2>🔎 Browse BAAA-TAHs</h2><input id="search" oninput="render()" placeholder="Search caravans, tools, cars..." style="width:100%;padding:14px;border:2px solid #ddd;border-radius:12px">
+<div id="browseFeed"></div></section>
+
+<section id="post"><h2>🐑 Post a BAAA-TAH</h2>
+<div class="card form">
+<input id="title" placeholder="What have you got?">
+<select id="category"><option>Cars & Vehicles</option><option>Caravans</option><option>Tools</option><option>Electronics</option><option>Furniture</option><option>Services</option><option>Animals</option><option>Property</option><option>Other</option></select>
+<input id="want" placeholder="What would you trade for?">
+<input id="location" placeholder="Town / area (no exact address)">
+<textarea id="desc" rows="4" placeholder="Tell people about it..."></textarea>
+<button class="primary" onclick="post()">🐑 BAAA-TAH IT!</button></div></section>
+
+<section id="offers"><h2>🤝 My BAAA-TAHs & Offers</h2><div class="card"><b>No offers yet.</b><p class="muted">When someone makes an offer, it will appear here.</p></div></section>
+<section id="profile"><h2>👤 Profile</h2><div class="card"><h3>BAAA-TAH Member</h3><p class="muted">Verification, ratings, completed trades and reputation will live here.</p><span class="tag">⭐ New member</span></div><h3>Safety</h3><div class="card">Never share passwords or financial details. Meet safely and inspect items before trading.</div></section>
+</main>
+
+<nav>
+<button onclick="show('home')">🏠 Home</button><button onclick="show('browse')">🔎 Browse</button><button onclick="show('post')">🐑 Post</button><button onclick="show('offers')">🤝 Offers</button><button onclick="show('profile')">👤 Me</button>
+</nav>
+
+<div class="modal" id="success"><div class="sheet"><div class="big-sheep">🐑</div><div class="sound">BAAAAA—EEEEWEEEE BEAUTYYYYYY!!!—BAAAAAAA!</div><p style="text-align:center">Your BAAA-TAH is live!</p><button class="primary" style="width:100%" onclick="closeSuccess()">Ewe Beauty!</button></div></div>
+
+<script>
+let listings=[
+{title:"17ft Caravan",cat:"Caravans",want:"Small car, trailer, tools or interesting trades",loc:"Bundaberg area",emoji:"🚐"},
+{title:"Workshop Tool Bundle",cat:"Tools",want:"Caravan parts or camping gear",loc:"Childers area",emoji:"🔧"},
+{title:"Dining Table",cat:"Furniture",want:"Something useful around the home",loc:"Bundaberg",emoji:"🪑"}
+];
+function show(id){document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');render();}
+function render(){
+ const q=(document.getElementById('search')?.value||'').toLowerCase();
+ const items=listings.filter(x=>(x.title+x.cat+x.want+x.loc).toLowerCase().includes(q));
+ const html=items.map((x,i)=>`<div class="card listing" onclick="offer(${i})"><div class="pic">${x.emoji}</div><div><b>${x.title}</b><div class="muted">${x.cat} · ${x.loc}</div><span class="tag">Wants: ${x.want}</span></div></div>`).join('');
+ document.getElementById('feed').innerHTML=items.slice(0,3).map((x,i)=>`<div class="card listing" onclick="offer(${i})"><div class="pic">${x.emoji}</div><div><b>${x.title}</b><div class="muted">${x.loc}</div><span class="tag">🐑 Make offer</span></div></div>`).join('');
+ document.getElementById('browseFeed').innerHTML=html||'<div class="card">No BAAA-TAHs found.</div>';
+}
+function offer(i){alert("BAAA-TAH offer flow: next build adds photos, user accounts, chat, counter-offers and trade acceptance.");}
+function post(){
+ const title=document.getElementById('title').value.trim(); if(!title){alert("Tell us what you've got first!");return;}
+ listings.unshift({title,cat:category.value,want:want.value||"Open to offers",loc:location.value||"Australia",emoji:"📦"});
+ document.getElementById('success').classList.add('open');
+ ['title','want','location','desc'].forEach(id=>document.getElementById(id).value='');
+}
+function closeSuccess(){document.getElementById('success').classList.remove('open');show('home')}
+render();
+</script>
+</body></html>
